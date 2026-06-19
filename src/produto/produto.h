@@ -5,11 +5,11 @@
 
 class Produto
 {
+protected:
     int id;
     std::string titulo;
     double precoBase;
     int idArtesao;
-    
 
     static int proximoID;
 
@@ -20,8 +20,12 @@ public:
     std::string getTitulo();
     double getPreco();
     int getIDartesao();
+
+    static void setProximoID (int valor);
+
+    virtual double calcularFrete() = 0;
+
+    virtual void exibirDados();
 };
 
 #endif
-
-int Produto::proximoID = 0;
