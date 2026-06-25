@@ -11,8 +11,6 @@ protected:
     double precoBase;
     int idArtesao;
 
-    static int proximoID;
-
 public:
     Produto(std::string ttl, double p);
 
@@ -20,8 +18,6 @@ public:
     std::string getTitulo();
     double getPreco();
     int getIDartesao();
-
-    static void setProximoID (int valor);
 
     virtual double calcularFrete() = 0;
 
