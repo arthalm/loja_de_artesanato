@@ -26,7 +26,7 @@ void Pedido::avancarEstado()
     }
 }
 
-double calcularTotal()
+double Pedido::calcularTotal() const
 {
     double total = 0;
     for (int i = 0; i < produtos.size(); i++)
