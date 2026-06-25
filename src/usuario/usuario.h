@@ -6,14 +6,16 @@
 
 class Usuario
 {
+protected:
     std::string nome;
     std::string login;
-    // std::Endereco endereco
 
 public:
-    Usuario() {};
+    Usuario(std::string nm, std::string log) : nome(nm), login(log) {};
 
-    std::string getNome();
+    virtual void exibirDados() = 0;
+
+    virtual ~Usuario() {};
 };
 
 #endif
