@@ -10,7 +10,7 @@ protected:
     std::string cpf;
 
 public:
-    Usuario(std::string nm, std::string c){}
+    Usuario(std::string nm, std::string c);
 
     std::string getNome();
     std::string getCPF();
