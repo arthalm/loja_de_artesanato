@@ -17,7 +17,7 @@ class Pintura : public Produto
 public:
     Pintura(std::string ttl, double pr, std::string ttinta, bool pmol, Dimensao tq);
     
-    double calcularFrete() override;
+    double calcularPreco() override;
 };
 
 #endif

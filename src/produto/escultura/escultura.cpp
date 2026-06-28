@@ -1,11 +1,24 @@
 #include "escultura.h"
 
-Escultura::Escultura(std::string ttl, double pr, std::string mat, double peso)
+Escultura::Escultura(std::string ttl, double pr, std::string mat, Peso peso)
 : Produto(ttl, pr), material(mat), pesoTotal(peso) {}
 
-double Escultura::calcularFrete()
+double Escultura::calcularPreco()
 {
-    //taxa base = 20
-    //adicional = peso * 4.50
-    return 20 + (pesoTotal * 4.50);
+    double multiplicador = 1.0;
+
+    switch (pesoTotal)
+    {
+    case Peso::LEVE:
+        multiplicador = 1.10;
+        break;
+    case Peso::MEDIO:
+        multiplicador = 1.25;
+        break;
+    case Peso::PESADO:
+        multiplicador = 1.50;
+        break;
+    }
+
+    return precoBase * multiplicador;
 }
