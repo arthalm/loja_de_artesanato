@@ -2,5 +2,15 @@
 
 std::string Usuario::getNome()
 {
-    return std::string();
+    return nome;
+}
+
+std::string Usuario::getCPF()
+{
+    return cpf;
+}
+
+void Usuario::exibirDados()
+{
+    std::cout << nome << " (" << cpf << ")\n";
 }
