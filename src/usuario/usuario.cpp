@@ -1,4 +1,5 @@
 #include "usuario.h"
+<<<<<<< HEAD
 #include <string>
 #include <iostream>
 
@@ -14,3 +15,10 @@ void Usuario::exibirDados()
 {
     std::cout << nome << " (" << cpf << ")";
 }
+=======
+
+std::string Usuario::getNome()
+{
+    return std::string();
+}
+>>>>>>> arthur

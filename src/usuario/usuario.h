@@ -2,6 +2,7 @@
 #define USUARIO_H
 
 #include <string>
+<<<<<<< HEAD
 
 class Usuario
 {
@@ -17,6 +18,20 @@ public:
 
     void exibirDados();
 
+=======
+#include <iostream>
+
+class Usuario
+{
+    std::string nome;
+    std::string login;
+    // std::Endereco endereco
+
+public:
+    Usuario() {};
+
+    std::string getNome();
+>>>>>>> arthur
 };
 
 #endif
