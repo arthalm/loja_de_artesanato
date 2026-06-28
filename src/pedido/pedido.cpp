@@ -31,7 +31,7 @@ double Pedido::calcularTotal() const
     double total = 0;
     for (int i = 0; i < produtos.size(); i++)
     {
-        total += produtos[i]->getPreco();
+        total += produtos[i]->calcularPreco();
     }
 
     return total;
