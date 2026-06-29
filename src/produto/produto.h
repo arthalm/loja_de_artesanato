@@ -21,11 +21,13 @@ public:
     double getPreco();
     int getIDartesao();
 
-    static void setProximoID (int valor);
+    static void setProximoID(int valor);
 
-    virtual double calcularFrete() = 0;
+    virtual double calcularPreco() = 0;
 
     virtual void exibirDados();
+
+    virtual ~Produto() {}
 };
 
 #endif
