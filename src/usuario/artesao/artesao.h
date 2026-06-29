@@ -3,11 +3,6 @@
 
 #include "usuario.h"
 
-std::ostream &operator<<(std::ostream &os, Artesao &c)
-{
-    
-}
-
 class Artesao : public Usuario
 {
 private:
@@ -15,9 +10,17 @@ private:
     std::string biografia;
 
 public:
-    Artesao(std::string nm, std::string log, std::string nm_ate, std::string bio) : Usuario(nm, log), nome_atelie(nm_ate), biografia(bio)  {}
+    Artesao(std::string nm, std::string log, std::string nm_ate, std::string bio) : Usuario(nm, log), nome_atelie(nm_ate), biografia(bio) {}
+
+    std::string getNomeAtelie();
+    std::string getBiografia();
 
     void exibirDados() override
+    {
+        std::cout << "===DADOS=DO=ARTESÃO===" << "\nNome: " << Artesao::getNome() << "\nLogin: " << Artesao::getLogin() << "\nNome do ateliê: " << Artesao::getNomeAtelie() << "\nBiografia: " << Artesao::getBiografia() << std::endl;
+    }
+
+    void cadastrarProduto()
     {
     }
 };

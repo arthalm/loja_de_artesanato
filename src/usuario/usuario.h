@@ -13,6 +13,9 @@ protected:
 public:
     Usuario(std::string nm, std::string log) : nome(nm), login(log) {};
 
+    std::string getNome();
+    std::string getLogin();
+
     virtual void exibirDados() = 0;
 
     virtual ~Usuario() {};
