@@ -1,8 +1,4 @@
 #include "usuario.h"
-<<<<<<< HEAD
-
-std::string Usuario::getNome()
-=======
 
 std::string Usuario::getNome() { return nome; }
 std::string Usuario::getLogin() { return login; }
@@ -14,12 +10,6 @@ void Usuario::setSenha(std::string novaSenha) {
 }
 
 void Usuario::exibirDados()
->>>>>>> jordson
 {
-    return nome;
-}
-
-std::string Usuario::getLogin()
-{
-    return login;
+    std::cout << nome << " (" << cpf << ")";
 }

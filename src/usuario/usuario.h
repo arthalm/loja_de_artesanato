@@ -9,17 +9,6 @@ class Usuario
 protected:
     std::string nome;
     std::string login;
-<<<<<<< HEAD
-
-public:
-    Usuario(std::string nm, std::string log) : nome(nm), login(log) {};
-
-    std::string getNome();
-    std::string getLogin();
-
-    virtual void exibirDados() = 0;
-
-=======
     std::string cpf;
     std::string senha;
 
@@ -34,7 +23,6 @@ public:
     void setSenha(std::string novaSenha);
 
     virtual void exibirDados() = 0;
->>>>>>> jordson
     virtual ~Usuario() {};
 };
 
