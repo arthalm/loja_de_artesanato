@@ -48,4 +48,48 @@ void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Prod
         }
     }
     fusr.close();
+
+    //parte de Produtos
+    std::ofstream fprod(arquivoProdutos);
+    if (!fprod.is_open())
+    {
+        std::cerr << "Erro ao abrir " << arquivoProdutos << " para escrita.\n";
+        return;
+    }
+
+    for (Produto *prod : p)
+    {
+        //se produto eh uma pintura
+        if (Pintura *pin = dynamic_cast<Pintura *>(prod))
+        {
+            fprod << "PINTURA|"
+                  << pin->getTitulo() << "|"
+                  << pin->getPreco() << "|"
+                  << pin->getTipoTinta() << "|"
+                  << pin->getPossuiMoldura() << "|"
+                  << static_cast<int>(pin->getTamanho()) << "|"
+                  << pin->getIDartesao() << "\n";
+        }
+        //se produto eh uma escultura
+        else if (Escultura *esc = dynamic_cast<Escultura *>(prod))
+        {
+            fprod << "ESCULTURA|"
+                  << esc->getTitulo() << "|"
+                  << esc->getPreco() << "|"
+                  << esc->getMaterial() << "|"
+                  << static_cast<int>(esc->getPeso()) << "|"
+                  << esc->getIDartesao() << "\n";
+        }
+        //se produto eh um artesanato
+        else if (Artesanato *art = dynamic_cast<Artesanato *>(prod))
+        {
+            fprod << "ARTESANATO|"
+                  << art->getTitulo() << "|"
+                  << art->getPreco() << "|"
+                  << art->getTempo() << "|"
+                  << art->getFeitoSobEncomenda() << "|"
+                  << art->getIDartesao() << "\n";
+        }
+    }
+    fprod.close();
 }
