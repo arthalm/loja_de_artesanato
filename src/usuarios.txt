@@ -1,0 +1,3 @@
+ARTESAO|artesao1|art1|12345678912|12345678|lojadearte|loja de arte
+ARTESAO|artesao2|art2|12345678911|12345678|atelie|loja de arte 2
+CLIENTE|leonardo|leo|12345678922|12345678|rua bairro cidade estado|1e+08

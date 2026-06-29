@@ -93,3 +93,108 @@ void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Prod
     }
     fprod.close();
 }
+
+void GerenciadorArquivos::carregarDados(std::vector<Usuario *> &u, std::vector<Produto *> &p)
+{
+    //parte de usuarios
+    std::ifstream fusr(arquivoUsuarios);
+    if (fusr.is_open())
+    {
+        std::string linha;
+        while (std::getline(fusr, linha))
+        {
+            std::stringstream ss(linha);
+            std::string tipo;
+            std::getline(ss, tipo, '|');
+
+            if (tipo == "CLIENTE")
+            {
+                std::string nm, log, cpf, pwd, end;
+                double saldo;
+                std::getline(ss, nm, '|');
+                std::getline(ss, log, '|');
+                std::getline(ss, cpf, '|');
+                std::getline(ss, pwd, '|');
+                std::getline(ss, end, '|');
+                ss >> saldo;
+                u.push_back(new Cliente(nm, log, cpf, pwd, end, saldo));
+            }
+            else if (tipo == "ARTESAO")
+            {
+                std::string nm, log, cpf, pwd, atelie, bio;
+                std::getline(ss, nm, '|');
+                std::getline(ss, log, '|');
+                std::getline(ss, cpf, '|');
+                std::getline(ss, pwd, '|');
+                std::getline(ss, atelie, '|');
+                std::getline(ss, bio, '|');
+                u.push_back(new Artesao(nm, log, cpf, pwd, atelie, bio));
+            }
+        }
+        fusr.close();
+    }
+
+    //parte de produtos
+    std::ifstream fprod(arquivoProdutos);
+    if (fprod.is_open())
+    {
+        std::string linha;
+        while (std::getline(fprod, linha))
+        {
+            std::stringstream ss(linha);
+            std::string tipo;
+            std::getline(ss, tipo, '|');
+
+            if (tipo == "PINTURA")
+            {
+                std::string ttl, tinta;
+                double preco;
+                int moldura, tamanho, idArt;
+                std::getline(ss, ttl, '|');
+                ss >> preco;
+                ss.ignore();
+                std::getline(ss, tinta, '|');
+                ss >> moldura;
+                ss.ignore();
+                ss >> tamanho;
+                ss.ignore();
+                ss >> idArt;
+                p.push_back(new Pintura(ttl, preco, tinta,
+                                        static_cast<bool>(moldura),
+                                        static_cast<Dimensao>(tamanho)));
+            }
+            else if (tipo == "ESCULTURA")
+            {
+                std::string ttl, mat;
+                double preco;
+                int peso, idArt;
+                std::getline(ss, ttl, '|');
+                ss >> preco;
+                ss.ignore();
+                std::getline(ss, mat, '|');
+                ss >> peso;
+                ss.ignore();
+                ss >> idArt;
+                p.push_back(new Escultura(ttl, preco, mat,
+                                          static_cast<Peso>(peso)));
+            }
+            else if (tipo == "ARTESANATO")
+            {
+                std::string ttl;
+                double preco;
+                int tempo, sob, idArt;
+                std::getline(ss, ttl, '|');
+                ss >> preco;
+                ss.ignore();
+                ss >> tempo;
+                ss.ignore();
+                ss >> sob;
+                ss.ignore();
+                ss >> idArt;
+                p.push_back(new Artesanato(ttl, preco, tempo,
+                                           static_cast<bool>(sob)));
+            }
+        }
+        fprod.close();
+    }
+}

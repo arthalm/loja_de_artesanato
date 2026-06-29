@@ -2,7 +2,9 @@
 #include <string>
 #include <iostream>
 
-Produto::Produto(std::string ttl, double p): titulo(ttl), precoBase(p)
+static int proximoID = 1;
+
+Produto::Produto(std::string ttl, double p): id(proximoID++), titulo(ttl), precoBase(p), idArtesao(0)
 {}
 
 int Produto::getID()

@@ -18,7 +18,7 @@ private:
     Usuario* usuarioLogado;
 
     // Menus
-    void menuDeslogado();
+    bool menuDeslogado();
     void menuCliente();
     void menuArtesao();
 

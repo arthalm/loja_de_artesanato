@@ -1,0 +1,3 @@
+PINTURA|pintura|100|oleo|1|1|0
+ESCULTURA|escultura|500|madeira|2|0
+ARTESANATO|artesanato|587|12|0|0

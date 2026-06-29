@@ -4,14 +4,20 @@
 #include "../produto/artesanato/artesanato.h"
 #include "../usuario/cliente/cliente.h"
 #include "../usuario/artesao/artesao.h"
+#include "../gerenciador/gerenciador.h"
 #include <iostream>
 #include <limits>
 
-SistemaLoja::SistemaLoja() {
+SistemaLoja::SistemaLoja()
+{
     usuarioLogado = nullptr;
+    GerenciadorArquivos ga;
+    ga.carregarDados(usuarios, catalogo);
 }
 
 SistemaLoja::~SistemaLoja() {
+    GerenciadorArquivos ga;
+    ga.salvarDados(usuarios, catalogo);
     for (auto u : usuarios) delete u;
     for (auto p : catalogo) delete p;
     for (auto ped : pedidos) delete ped;
@@ -23,7 +29,7 @@ void SistemaLoja::iniciarSistema() {
     bool rodando = true;
     while (rodando) {
         if (usuarioLogado == nullptr) {
-            menuDeslogado();
+            rodando = menuDeslogado();
         } else {
             if (dynamic_cast<Cliente*>(usuarioLogado) != nullptr) {
                 menuCliente();
@@ -34,7 +40,7 @@ void SistemaLoja::iniciarSistema() {
     }
 }
 
-void SistemaLoja::menuDeslogado() {
+bool SistemaLoja::menuDeslogado() {
     int opcao = -1;
     std::cout << "\n Tela de Inicial\n";
     std::cout << "1. Fazer Login\n";
@@ -50,9 +56,10 @@ void SistemaLoja::menuDeslogado() {
         case 2: cadastrarCliente(); break;
         case 3: cadastrarArtesao(); break;
         case 4: recuperarSenha(); break;
-        case 0: exit(0);
+        case 0: return false;
         default: std::cout << "Opcao invalida!\n";
     }
+    return true;
 }
 
 void SistemaLoja::menuCliente() {
