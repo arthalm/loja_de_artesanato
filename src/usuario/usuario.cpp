@@ -5,12 +5,7 @@ std::string Usuario::getNome()
     return nome;
 }
 
-std::string Usuario::getCPF()
+std::string Usuario::getLogin()
 {
-    return cpf;
-}
-
-void Usuario::exibirDados()
-{
-    std::cout << nome << " (" << cpf << ")\n";
+    return login;
 }

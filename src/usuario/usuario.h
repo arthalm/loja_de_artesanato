@@ -8,15 +8,17 @@ class Usuario
 {
 protected:
     std::string nome;
-    std::string cpf;
+    std::string login;
 
 public:
-    Usuario(std::string nm, std::string c);
+    Usuario(std::string nm, std::string log) : nome(nm), login(log) {};
 
     std::string getNome();
-    std::string getCPF();
+    std::string getLogin();
 
-    void exibirDados();
+    virtual void exibirDados() = 0;
+
+    virtual ~Usuario() {};
 };
 
 #endif
