@@ -14,3 +14,9 @@ double Artesanato::calcularPreco()
 
     return preco;
 }
+
+int Artesanato::getTempo()
+{return tempoProducaoDias;}
+
+bool Artesanato::getFeitoSobEncomenda()
+{return feitoSobEncomenda;}

@@ -22,3 +22,9 @@ double Escultura::calcularPreco()
 
     return precoBase * multiplicador;
 }
+
+std::string Escultura::getMaterial()
+{return material;}
+
+Peso Escultura::getPeso()
+{return pesoTotal;}

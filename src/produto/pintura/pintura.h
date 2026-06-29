@@ -18,6 +18,10 @@ public:
     Pintura(std::string ttl, double pr, std::string ttinta, bool pmol, Dimensao tq);
     
     double calcularPreco() override;
+
+    std::string getTipoTinta();
+    bool getPossuiMoldura();
+    Dimensao getTamanho();
 };
 
 #endif

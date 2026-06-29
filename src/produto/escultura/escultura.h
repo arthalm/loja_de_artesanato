@@ -18,6 +18,9 @@ public:
     Escultura(std::string ttl, double pr, std::string mat, Peso peso);
     
     double calcularPreco() override;
+
+    std::string getMaterial();
+    Peso getPeso();
 };
 
 #endif

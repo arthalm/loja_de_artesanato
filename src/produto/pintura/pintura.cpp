@@ -11,3 +11,12 @@ double Pintura::calcularPreco()
     }
     return precoBase;
 }
+
+std::string Pintura::getTipoTinta()
+{return tipoTinta;}
+
+bool Pintura::getPossuiMoldura()
+{return possuiMoldura;}
+
+Dimensao Pintura::getTamanho()
+{return tamanhoQuadro;}
