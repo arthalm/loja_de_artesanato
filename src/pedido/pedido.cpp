@@ -1,6 +1,6 @@
 #include "pedido.h"
 
-void Pedido::adicionarProduto (Produto* p)
+void Pedido::adicionarProduto(Produto *p)
 {
     produtos.push_back(p);
 }

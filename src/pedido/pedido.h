@@ -17,25 +17,17 @@ enum class Status
 class Pedido
 {
     Cliente cliente;
-    std::vector <Produto*> produtos;
+    std::vector<Produto *> produtos;
     Status statusAtual;
 
 public:
+    Pedido(Cliente c) : cliente(c), statusAtual(Status::RECEBIDO) {}
 
-    Pedido(Cliente c) : cliente(c), statusAtual(Status::RECEBIDO){}
-
-    std::string getClienteLogin();
-
-    Status getStatus();
-
-    std::vector<Produto*> getProdutos();
-
-    void adicionarProduto (Produto* p);
+    void adicionarProduto(Produto *p);
 
     void avancarEstado();
 
     double calcularTotal() const;
-
 };
 
 #endif

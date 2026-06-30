@@ -1,10 +1,6 @@
 #include "cliente.h"
 
-/*std::Endereco Cliente::getEndereco(){
-    return end_entrega;
-}*/
-
-std::string Cliente::getEndereco()
+const Endereco &Cliente::getEndereco() const
 {
     return end_entrega;
 }
@@ -12,4 +8,9 @@ std::string Cliente::getEndereco()
 double Cliente::getSaldoAtual()
 {
     return saldo_atual;
+}
+
+void Cliente::setEndereco(const Endereco &end)
+{
+    end_entrega = end;
 }

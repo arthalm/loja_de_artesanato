@@ -13,7 +13,7 @@ protected:
     std::string senha;
 
 public:
-    Usuario(std::string nm, std::string log, std::string c, std::string pwd) 
+    Usuario(std::string nm, std::string log, std::string c, std::string pwd)
         : nome(nm), login(log), cpf(c), senha(pwd) {};
 
     std::string getNome();

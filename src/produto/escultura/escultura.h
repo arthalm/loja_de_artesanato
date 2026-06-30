@@ -6,7 +6,9 @@
 
 enum class Peso
 {
-    LEVE, MEDIO, PESADO
+    LEVE,
+    MEDIO,
+    PESADO
 };
 
 class Escultura : public Produto
@@ -16,7 +18,7 @@ class Escultura : public Produto
 
 public:
     Escultura(std::string ttl, double pr, std::string mat, Peso peso);
-    
+
     double calcularPreco() override;
 
     std::string getMaterial();

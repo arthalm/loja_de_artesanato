@@ -5,7 +5,11 @@
 #include <string>
 
 enum Dimensao
-{PEQUENO, MEDIO, GRANDE};
+{
+    PEQUENO,
+    MEDIO,
+    GRANDE
+};
 
 class Pintura : public Produto
 {
@@ -13,10 +17,9 @@ class Pintura : public Produto
     bool possuiMoldura;
     Dimensao tamanhoQuadro;
 
-
 public:
     Pintura(std::string ttl, double pr, std::string ttinta, bool pmol, Dimensao tq);
-    
+
     double calcularPreco() override;
 
     std::string getTipoTinta();

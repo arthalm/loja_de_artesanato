@@ -11,11 +11,11 @@
 class SistemaLoja
 {
 private:
-    std::vector<Usuario*> usuarios;
-    std::vector<Produto*> catalogo;
-    std::vector<Pedido*> pedidos;
+    std::vector<Usuario *> usuarios;
+    std::vector<Produto *> catalogo;
+    std::vector<Pedido *> pedidos;
 
-    Usuario* usuarioLogado;
+    Usuario *usuarioLogado;
 
     // Menus
     bool menuDeslogado();
@@ -32,6 +32,9 @@ private:
     void cadastrarProduto();
     void listarCatalogo();
     void realizarVenda();
+
+    // Cliente
+    void cadastrarEndereco();
 
 public:
     SistemaLoja();
