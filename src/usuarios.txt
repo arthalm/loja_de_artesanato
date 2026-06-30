@@ -1,2 +1,0 @@
-CLIENTE|leonardo|leo|12345678912|12345678|leonardo|rua|1|casa|tirol|natal|rn|12345678|500
-ARTESAO|joao|joao|12345678913|12345678|loja de escultura|loja

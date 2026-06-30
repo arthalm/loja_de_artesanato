@@ -34,6 +34,9 @@ public:
                   << "\nCEP: " << e.getCEP()
                   << "\nSaldo atual: R$ " << getSaldoAtual() << std::endl;
     }
+
+    void adicionarSaldo(double valor);
+    void descontarSaldo(double valor);
 };
 
 #endif
