@@ -25,6 +25,12 @@ public:
 
     void adicionarProduto(Produto *p);
 
+    std::string getClienteLogin();
+
+    Status Pedido::getStatus();
+
+    std::vector<Produto *> getProdutos();
+
     void avancarEstado();
 
     double calcularTotal() const;
