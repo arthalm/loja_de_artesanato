@@ -12,13 +12,13 @@ SistemaLoja::SistemaLoja()
 {
     usuarioLogado = nullptr;
     GerenciadorArquivos ga;
-    ga.carregarDados(usuarios, catalogo);
+    ga.carregarDados(usuarios, catalogo, pedidos);
 }
 
 SistemaLoja::~SistemaLoja()
 {
     GerenciadorArquivos ga;
-    ga.salvarDados(usuarios, catalogo);
+    ga.salvarDados(usuarios, catalogo, pedidos);
     for (auto u : usuarios)
         delete u;
     for (auto p : catalogo)

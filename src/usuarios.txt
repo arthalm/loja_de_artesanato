@@ -1,0 +1,2 @@
+ARTESAO|Joao|art1||12345678|loja de arte|loja
+CLIENTE|leonardo|leo||12345678|||0||||||700
