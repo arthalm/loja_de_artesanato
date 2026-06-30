@@ -18,7 +18,7 @@ class Pintura : public Produto
     Dimensao tamanhoQuadro;
 
 public:
-    Pintura(std::string ttl, double pr, std::string ttinta, bool pmol, Dimensao tq);
+    Pintura(std::string ttl, double pr, std::string ttinta, bool pmol, Dimensao tq, int qtd = 0);
 
     double calcularPreco() override;
 

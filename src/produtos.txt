@@ -1,1 +1,1 @@
-ESCULTURA|escultura|100|madeira|1|0
+ESCULTURA|estrela|100|1|madeira|1|0

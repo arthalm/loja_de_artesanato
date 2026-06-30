@@ -10,7 +10,7 @@
 #include <iostream>
 
 GerenciadorArquivos::GerenciadorArquivos(std::string arqUsr, std::string arqProd, std::string arqPed)
-    : arquivoUsuarios(arqUsr), arquivoProdutos(arqProd) {}
+: arquivoUsuarios(arqUsr), arquivoProdutos(arqProd), arquivoPedidos(arqPed) {}
 
 void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Produto *> p, std::vector<Pedido*> ped)
 {
@@ -73,6 +73,7 @@ void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Prod
             fprod << "PINTURA|"
                   << pin->getTitulo() << "|"
                   << pin->getPreco() << "|"
+                  << pin->getQuantidadeEstoque() << "|"
                   << pin->getTipoTinta() << "|"
                   << pin->getPossuiMoldura() << "|"
                   << static_cast<int>(pin->getTamanho()) << "|"
@@ -84,6 +85,7 @@ void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Prod
             fprod << "ESCULTURA|"
                   << esc->getTitulo() << "|"
                   << esc->getPreco() << "|"
+                  << esc->getQuantidadeEstoque() << "|"
                   << esc->getMaterial() << "|"
                   << static_cast<int>(esc->getPeso()) << "|"
                   << esc->getIDartesao() << "\n";
@@ -94,6 +96,7 @@ void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Prod
             fprod << "ARTESANATO|"
                   << art->getTitulo() << "|"
                   << art->getPreco() << "|"
+                  << art->getQuantidadeEstoque() << "|"
                   << art->getTempo() << "|"
                   << art->getFeitoSobEncomenda() << "|"
                   << art->getIDartesao() << "\n";
@@ -101,8 +104,8 @@ void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Prod
     }
     fprod.close();
 
-    //parte de pedido
-    std::ofstream fped("pedidos.txt");
+    // parte de pedido
+    std::ofstream fped(arquivoPedidos);
     if (!fped.is_open())
     {
         std::cerr << "Erro ao abrir " << arquivoPedidos << " para escrita.\n";
@@ -111,9 +114,18 @@ void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Prod
 
     for (Pedido *ped : ped)
     {
+        const Endereco &e = ped->getEnderecoEntrega();
         fped << "PEDIDO|"
              << ped->getClienteLogin() << "|"
-             << static_cast<int>(ped->getStatus());
+             << static_cast<int>(ped->getStatus()) << "|"
+             << e.getDestinatario() << "|"
+             << e.getLogradouro() << "|"
+             << e.getNumero() << "|"
+             << e.getComplemento() << "|"
+             << e.getBairro() << "|"
+             << e.getCidade() << "|"
+             << e.getEstado() << "|"
+             << e.getCEP();
         for (Produto *p : ped->getProdutos())
         {
             fped << "|" << p->getID();
@@ -123,7 +135,7 @@ void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Prod
     fped.close();
 }
 
-void GerenciadorArquivos::carregarDados(std::vector<Usuario *> &u, std::vector<Produto *> &p, std::vector<Pedido*> ped)
+void GerenciadorArquivos::carregarDados(std::vector<Usuario *> &u, std::vector<Produto *> &p, std::vector<Pedido *> ped)
 {
     // parte de usuarios
     std::ifstream fusr(arquivoUsuarios);
@@ -199,9 +211,11 @@ void GerenciadorArquivos::carregarDados(std::vector<Usuario *> &u, std::vector<P
             {
                 std::string ttl, tinta;
                 double preco;
-                int moldura, tamanho, idArt;
+                int quantidade, moldura, tamanho, idArt;
                 std::getline(ss, ttl, '|');
                 ss >> preco;
+                ss.ignore();
+                ss >> quantidade;
                 ss.ignore();
                 std::getline(ss, tinta, '|');
                 ss >> moldura;
@@ -211,38 +225,43 @@ void GerenciadorArquivos::carregarDados(std::vector<Usuario *> &u, std::vector<P
                 ss >> idArt;
                 p.push_back(new Pintura(ttl, preco, tinta,
                                         static_cast<bool>(moldura),
-                                        static_cast<Dimensao>(tamanho)));
+                                        static_cast<Dimensao>(tamanho),
+                                        quantidade));
             }
             else if (tipo == "ESCULTURA")
             {
                 std::string ttl, mat;
                 double preco;
-                int peso, idArt;
+                int quantidade, peso, idArt;
                 std::getline(ss, ttl, '|');
                 ss >> preco;
+                ss.ignore();
+                ss >> quantidade;
                 ss.ignore();
                 std::getline(ss, mat, '|');
                 ss >> peso;
                 ss.ignore();
                 ss >> idArt;
                 p.push_back(new Escultura(ttl, preco, mat,
-                                          static_cast<Peso>(peso)));
+                                          static_cast<Peso>(peso),
+                                          quantidade));
             }
             else if (tipo == "ARTESANATO")
             {
                 std::string ttl;
                 double preco;
-                int tempo, sob, idArt;
+                int quantidade, tempo, sob, idArt;
                 std::getline(ss, ttl, '|');
                 ss >> preco;
+                ss.ignore();
+                ss >> quantidade;
                 ss.ignore();
                 ss >> tempo;
                 ss.ignore();
                 ss >> sob;
                 ss.ignore();
                 ss >> idArt;
-                p.push_back(new Artesanato(ttl, preco, tempo,
-                                           static_cast<bool>(sob)));
+                p.push_back(new Artesanato(ttl, preco, tempo, static_cast<bool>(sob), quantidade));
             }
         }
         fprod.close();
@@ -278,7 +297,7 @@ void GerenciadorArquivos::carregarDados(std::vector<Usuario *> &u, std::vector<P
             {continue;}
 
             //ajusta o status dos pedidos
-            //pq foram salvos como int no arquivo
+            //pq foram salvos como string de numero no arquivo
             Pedido *pedido = new Pedido(*c);
             int status = std::stoi(statusStr);
             for (int i = 0; i < status; i++)
@@ -290,11 +309,13 @@ void GerenciadorArquivos::carregarDados(std::vector<Usuario *> &u, std::vector<P
             {
                 int id = std::stoi(idStr);
                 for (Produto *prod : p)
+                {
                     if (prod->getID() == id)
                     {
                         pedido->adicionarProduto(prod);
                         break;
                     }
+                }
             }
             ped.push_back(pedido);
         }

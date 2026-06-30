@@ -1,19 +1,17 @@
 #include "pedido.h"
-
+ 
 void Pedido::adicionarProduto(Produto *p)
-{
-    produtos.push_back(p);
-}
-
+{produtos.push_back(p);}
+ 
 std::string Pedido::getClienteLogin()
 {return cliente.getLogin();}
-
+ 
 Status Pedido::getStatus()
 {return statusAtual;}
-
+ 
 std::vector<Produto *> Pedido::getProdutos()
 {return produtos;}
-
+ 
 void Pedido::avancarEstado()
 {
     switch (statusAtual)
@@ -34,14 +32,24 @@ void Pedido::avancarEstado()
         break;
     }
 }
-
+ 
 double Pedido::calcularTotal() const
 {
     double total = 0;
-    for (int i = 0; i < produtos.size(); i++)
+    for (size_t i = 0; i < produtos.size(); i++)
     {
         total += produtos[i]->calcularPreco();
     }
-
+ 
     return total;
+}
+ 
+void Pedido::definirEnderecoEntrega(const Endereco &end)
+{
+    enderecoEntrega = end;
+}
+ 
+const Endereco &Pedido::getEnderecoEntrega() const
+{
+    return enderecoEntrega;
 }

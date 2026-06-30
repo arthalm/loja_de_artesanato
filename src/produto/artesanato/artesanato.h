@@ -10,7 +10,7 @@ class Artesanato : public Produto
     bool feitoSobEncomenda;
 
 public:
-    Artesanato(std::string ttl, double pr, int tempo, bool sobEncomenda);
+    Artesanato(std::string ttl, double pr, int tempo, bool sobEncomenda, int qtd = 0);
 
     double calcularPreco() override;
 

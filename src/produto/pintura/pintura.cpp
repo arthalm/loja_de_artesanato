@@ -1,7 +1,7 @@
 #include "pintura.h"
 
-Pintura::Pintura(std::string ttl, double pr, std::string ttinta, bool pmol, Dimensao tq)
-    : Produto(ttl, pr), tipoTinta(ttinta), possuiMoldura(pmol), tamanhoQuadro(tq) {}
+Pintura::Pintura(std::string ttl, double pr, std::string ttinta, bool pmol, Dimensao tq, int qtd)
+    : Produto(ttl, pr, qtd), tipoTinta(ttinta), possuiMoldura(pmol), tamanhoQuadro(tq) {}
 
 double Pintura::calcularPreco()
 {

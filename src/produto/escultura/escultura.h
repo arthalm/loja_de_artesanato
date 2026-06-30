@@ -17,7 +17,7 @@ class Escultura : public Produto
     Peso pesoTotal;
 
 public:
-    Escultura(std::string ttl, double pr, std::string mat, Peso peso);
+    Escultura(std::string ttl, double pr, std::string mat, Peso peso, int qtd = 0);
 
     double calcularPreco() override;
 

@@ -4,7 +4,7 @@
 
 static int proximoID = 1;
 
-Produto::Produto(std::string ttl, double p) : id(proximoID++), titulo(ttl), precoBase(p), idArtesao(0)
+Produto::Produto(std::string ttl, double p, int qtd) : id(proximoID++), titulo(ttl), precoBase(p), idArtesao(0), quantidadeEstoque(qtd)
 {
 }
 
@@ -28,11 +28,31 @@ int Produto::getIDartesao()
     return idArtesao;
 }
 
-void Produto::setProximoID(int valor)
+int Produto::getQuantidadeEstoque()
 {
+    return quantidadeEstoque;
 }
+
+void Produto::setQuantidadeEstoque(int qtd)
+{
+    quantidadeEstoque = qtd;
+}
+
+bool Produto::removerEstoque(int qtd)
+{
+    if (qtd <= 0 || qtd > quantidadeEstoque)
+    {
+        return false;
+    }
+    quantidadeEstoque -= qtd;
+    return true;
+}
+
+void Produto::setProximoID(int valor)
+{}
 
 void Produto::exibirDados()
 {
-    std::cout << titulo << " (#" << id << ") - R$ " << precoBase;
+    std::cout << titulo << " (#" << id << ") - R$ " << precoBase
+              << " - Estoque: " << quantidadeEstoque;
 }

@@ -1,2 +1,2 @@
-ARTESAO|Joao|art1||12345678|loja de arte|loja
-CLIENTE|leonardo|leo||12345678|||0||||||700
+CLIENTE|leonardo|leo|12345678912|12345678|leonardo|rua|1|casa|lagoa nova|natal|rn|12345678|1000
+ARTESAO|joao|joao|12345678913|12345678|loja do joao|loja de escultura

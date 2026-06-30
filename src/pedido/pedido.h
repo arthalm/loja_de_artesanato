@@ -19,21 +19,25 @@ class Pedido
     Cliente cliente;
     std::vector<Produto *> produtos;
     Status statusAtual;
+    Endereco enderecoEntrega;
 
 public:
-    Pedido(Cliente c) : cliente(c), statusAtual(Status::RECEBIDO) {}
+    Pedido(Cliente c) : cliente(c), statusAtual(Status::RECEBIDO), enderecoEntrega("", "", 0, "", "", "", "", "") {}
 
     void adicionarProduto(Produto *p);
 
     std::string getClienteLogin();
 
-    Status Pedido::getStatus();
+    Status getStatus();
 
     std::vector<Produto *> getProdutos();
 
     void avancarEstado();
 
     double calcularTotal() const;
+
+    void definirEnderecoEntrega(const Endereco &end);
+    const Endereco &getEnderecoEntrega() const;
 };
 
 #endif

@@ -1,7 +1,7 @@
 #include "escultura.h"
 
-Escultura::Escultura(std::string ttl, double pr, std::string mat, Peso peso)
-    : Produto(ttl, pr), material(mat), pesoTotal(peso) {}
+Escultura::Escultura(std::string ttl, double pr, std::string mat, Peso peso, int qtd)
+    : Produto(ttl, pr, qtd), material(mat), pesoTotal(peso) {}
 
 double Escultura::calcularPreco()
 {

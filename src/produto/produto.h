@@ -10,14 +10,19 @@ protected:
     std::string titulo;
     double precoBase;
     int idArtesao;
+    int quantidadeEstoque;
 
 public:
-    Produto(std::string ttl, double p);
+    Produto(std::string ttl, double p, int qtd = 0);
 
     int getID();
     std::string getTitulo();
     double getPreco();
     int getIDartesao();
+    int getQuantidadeEstoque();
+    void setQuantidadeEstoque(int qtd);
+
+    bool removerEstoque(int qtd = 1);
 
     static void setProximoID(int valor);
 

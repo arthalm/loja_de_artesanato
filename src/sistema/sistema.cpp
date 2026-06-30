@@ -94,6 +94,7 @@ void SistemaLoja::menuCliente()
     std::cout << "2. Comprar Produtos\n";
     std::cout << "3. Meu Perfil\n";
     std::cout << "4. Meu Endereço\n";
+    std::cout << "5. Meus Pedidos\n";
     std::cout << "0. Fazer Logout\n";
     std::cout << "Escolha: ";
     std::cin >> opcao;
@@ -112,6 +113,9 @@ void SistemaLoja::menuCliente()
     case 4:
         cadastrarEndereco();
         break;
+    case 5:
+        verMeusPedidos();
+        break;
     case 0:
         usuarioLogado = nullptr;
         std::cout << "Logout realizado com sucesso!\n";
@@ -128,6 +132,7 @@ void SistemaLoja::menuArtesao()
     std::cout << "1. Cadastrar Novo Produto\n";
     std::cout << "2. Ver Catalogo Geral\n";
     std::cout << "3. Meu Perfil\n";
+    std::cout << "4. Gerenciar Pedidos\n";
     std::cout << "0. Fazer Logout\n";
     std::cout << "Escolha: ";
     std::cin >> opcao;
@@ -142,6 +147,9 @@ void SistemaLoja::menuArtesao()
         break;
     case 3:
         usuarioLogado->exibirDados();
+        break;
+    case 4:
+        gerenciarPedidos();
         break;
     case 0:
         usuarioLogado = nullptr;
@@ -239,6 +247,7 @@ void SistemaLoja::cadastrarProduto()
     int tipo;
     std::string titulo;
     double preco;
+    int quantidade;
 
     std::cout << "\n-- Cadastro de Produto --\n";
     std::cout << "Tipo (1-Pintura, 2-Escultura, 3-Artesanato): ";
@@ -249,6 +258,8 @@ void SistemaLoja::cadastrarProduto()
     std::getline(std::cin, titulo);
     std::cout << "Preco Base (R$): ";
     std::cin >> preco;
+    std::cout << "Quantidade em Estoque: ";
+    std::cin >> quantidade;
 
     if (tipo == 1)
     {
@@ -264,7 +275,7 @@ void SistemaLoja::cadastrarProduto()
         std::cout << "Dimensao (0-Pequeno, 1-Medio, 2-Grande): ";
         std::cin >> dim;
 
-        catalogo.push_back(new Pintura(titulo, preco, tipoTinta, moldura, (Dimensao)dim));
+        catalogo.push_back(new Pintura(titulo, preco, tipoTinta, moldura, (Dimensao)dim, quantidade));
     }
     else if (tipo == 2)
     {
@@ -277,7 +288,7 @@ void SistemaLoja::cadastrarProduto()
         std::cout << "Peso (0-Leve, 1-Medio, 2-Pesado): ";
         std::cin >> peso;
 
-        catalogo.push_back(new Escultura(titulo, preco, material, (Peso)peso));
+        catalogo.push_back(new Escultura(titulo, preco, material, (Peso)peso, quantidade));
     }
     else if (tipo == 3)
     {
@@ -289,7 +300,7 @@ void SistemaLoja::cadastrarProduto()
         std::cout << "Feito sob Encomenda? (1-Sim, 0-Nao): ";
         std::cin >> encomenda;
 
-        catalogo.push_back(new Artesanato(titulo, preco, tempo, encomenda));
+        catalogo.push_back(new Artesanato(titulo, preco, tempo, encomenda, quantidade));
     }
     std::cout << "-> Produto adicionado ao catalogo com sucesso!\n";
 }
@@ -328,6 +339,7 @@ void SistemaLoja::realizarVenda()
 
     Pedido *novoPedido = new Pedido(*clienteAtual);
     int idBusca = -1;
+    bool algumProdutoAdicionado = false;
 
     listarCatalogo();
 
@@ -345,9 +357,18 @@ void SistemaLoja::realizarVenda()
         {
             if (p->getID() == idBusca)
             {
-                novoPedido->adicionarProduto(p);
-                std::cout << "-> Produto '" << p->getTitulo() << "' adicionado!\n";
                 encontrado = true;
+
+                if (!p->removerEstoque(1))
+                {
+                    std::cout << "-> Produto '" << p->getTitulo() << "' sem estoque disponivel.\n";
+                    break;
+                }
+
+                novoPedido->adicionarProduto(p);
+                algumProdutoAdicionado = true;
+                std::cout << "-> Produto '" << p->getTitulo() << "' adicionado! (Estoque restante: "
+                          << p->getQuantidadeEstoque() << ")\n";
                 break;
             }
         }
@@ -357,24 +378,40 @@ void SistemaLoja::realizarVenda()
         }
     }
 
-    novoPedido->avancarEstado();
-    pedidos.push_back(novoPedido);
-
-    std::cout << "Pedido finalizado com sucesso!\n";
-    std::cout << "Comprador: " << clienteAtual->getNome() << "\n";
-    std::cout << "Valor total da compra: R$ " << novoPedido->calcularTotal() << "\n";
-}
-
-void SistemaLoja::cadastrarEndereco()
-{
-    Cliente *cliente = dynamic_cast<Cliente *>(usuarioLogado);
-
-    if (cliente == nullptr)
+    if (!algumProdutoAdicionado)
     {
-        std::cout << "Apenas clientes podem cadastrar endereço.\n";
+        std::cout << "-> Nenhum produto foi adicionado. Compra cancelada.\n";
+        delete novoPedido;
         return;
     }
 
+    // garante que o cliente tenha um endereço de entrega cadastrado.
+    if (clienteAtual->getEndereco().getLogradouro().empty())
+    {
+        std::cout << "\nVocê ainda não possui um endereço cadastrado.\n";
+        std::cout << "=== Cadastro de Endereço de Entrega ===\n";
+        Endereco endereco = lerEnderecoDoTeclado();
+        clienteAtual->setEndereco(endereco);
+    }
+
+    novoPedido->definirEnderecoEntrega(clienteAtual->getEndereco());
+    novoPedido->avancarEstado();
+    pedidos.push_back(novoPedido);
+
+    const Endereco &e = novoPedido->getEnderecoEntrega();
+    std::cout << "\nPedido finalizado com sucesso!\n";
+    std::cout << "Comprador: " << clienteAtual->getNome() << "\n";
+    std::cout << "Valor total da compra: R$ " << novoPedido->calcularTotal() << "\n";
+    std::cout << "Sera entregue no endereço cadastrado:\n";
+    std::cout << "  " << e.getLogradouro() << ", " << e.getNumero();
+    if (!e.getComplemento().empty())
+        std::cout << " - " << e.getComplemento();
+    std::cout << "\n  " << e.getBairro() << " - " << e.getCidade() << "/" << e.getEstado()
+              << " - CEP: " << e.getCEP() << "\n";
+}
+
+Endereco SistemaLoja::lerEnderecoDoTeclado()
+{
     std::string destinatario;
     std::string logradouro;
     int numero;
@@ -385,7 +422,6 @@ void SistemaLoja::cadastrarEndereco()
     std::string cep;
 
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::cout << "\n=== Cadastro de Endereço ===\n";
     std::cout << "Destinatário: ";
     std::getline(std::cin, destinatario);
     std::cout << "Logradouro: ";
@@ -404,17 +440,126 @@ void SistemaLoja::cadastrarEndereco()
     std::cout << "CEP: ";
     std::getline(std::cin, cep);
 
-    Endereco endereco(
-        destinatario,
-        logradouro,
-        numero,
-        complemento,
-        bairro,
-        cidade,
-        estado,
-        cep);
+    return Endereco(destinatario, logradouro, numero, complemento, bairro, cidade, estado, cep);
+}
 
+std::string SistemaLoja::statusParaTexto(Status s)
+{
+    switch (s)
+    {
+    case Status::RECEBIDO:
+        return "Recebido";
+    case Status::PROCESSANDO:
+        return "Processando";
+    case Status::ENVIADO:
+        return "Enviado";
+    case Status::EM_TRANSPORTE:
+        return "Em Transporte";
+    case Status::ENTREGUE:
+        return "Entregue";
+    }
+    return "Desconhecido";
+}
+
+void SistemaLoja::cadastrarEndereco()
+{
+    Cliente *cliente = dynamic_cast<Cliente *>(usuarioLogado);
+
+    if (cliente == nullptr)
+    {
+        std::cout << "Apenas clientes podem cadastrar endereço.\n";
+        return;
+    }
+
+    std::cout << "\n=== Cadastro de Endereço ===\n";
+    Endereco endereco = lerEnderecoDoTeclado();
     cliente->setEndereco(endereco);
 
     std::cout << "Endereço cadastrado com sucesso!\n";
+}
+
+void SistemaLoja::verMeusPedidos()
+{
+    Cliente *clienteAtual = dynamic_cast<Cliente *>(usuarioLogado);
+
+    if (clienteAtual == nullptr)
+    {
+        std::cout << "Erro: Apenas clientes podem ver seus pedidos.\n";
+        return;
+    }
+
+    std::cout << "\n-- Meus Pedidos --\n";
+    bool algumPedido = false;
+
+    for (auto ped : pedidos)
+    {
+        if (ped->getClienteLogin() != clienteAtual->getLogin())
+            continue;
+
+        algumPedido = true;
+        const Endereco &e = ped->getEnderecoEntrega();
+
+        std::cout << "------------------------------\n";
+        std::cout << "Status: " << statusParaTexto(ped->getStatus()) << "\n";
+        std::cout << "Produtos:\n";
+        for (auto p : ped->getProdutos())
+        {
+            std::cout << "  - " << p->getTitulo() << " (R$ " << p->calcularPreco() << ")\n";
+        }
+        std::cout << "Total: R$ " << ped->calcularTotal() << "\n";
+        std::cout << "Entrega em: " << e.getLogradouro() << ", " << e.getNumero()
+                  << " - " << e.getBairro() << " - " << e.getCidade() << "/" << e.getEstado() << "\n";
+    }
+
+    if (!algumPedido)
+    {
+        std::cout << "Você ainda não fez nenhum pedido.\n";
+    }
+}
+
+void SistemaLoja::gerenciarPedidos()
+{
+    std::cout << "\n-- Gerenciar Pedidos (pendentes) --\n";
+
+    std::vector<Pedido *> pendentes;
+    for (auto ped : pedidos)
+    {
+        if (ped->getStatus() != Status::ENTREGUE)
+        {
+            pendentes.push_back(ped);
+        }
+    }
+
+    if (pendentes.empty())
+    {
+        std::cout << "Nenhum pedido pendente no momento.\n";
+        return;
+    }
+
+    for (size_t i = 0; i < pendentes.size(); i++)
+    {
+        Pedido *ped = pendentes[i];
+        std::cout << i + 1 << ". Cliente: " << ped->getClienteLogin()
+                  << " | Status: " << statusParaTexto(ped->getStatus())
+                  << " | Total: R$ " << ped->calcularTotal() << "\n";
+    }
+
+    std::cout << "Digite o numero do pedido para avançar o status (0 para cancelar): ";
+    int escolha;
+    std::cin >> escolha;
+
+    if (escolha <= 0 || static_cast<size_t>(escolha) > pendentes.size())
+    {
+        std::cout << "Operação cancelada.\n";
+        return;
+    }
+
+    Pedido *selecionado = pendentes[escolha - 1];
+    selecionado->avancarEstado();
+
+    std::cout << "-> Pedido atualizado! Novo status: " << statusParaTexto(selecionado->getStatus()) << "\n";
+    if (selecionado->getStatus() == Status::ENTREGUE)
+    {
+        std::cout << "-> Pedido entregue! Ele saiu da lista de pedidos pendentes.\n";
+    }
 }

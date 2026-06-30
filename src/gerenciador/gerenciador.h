@@ -18,7 +18,7 @@ public:
     GerenciadorArquivos(std::string arqUsr = "usuarios.txt", std::string arqProd = "produtos.txt", std::string arqPed = "pedidos.txt");
 
     void salvarDados(std::vector<Usuario *> u, std::vector<Produto *> p, std::vector<Pedido*> ped);
-    void carregarDados(std::vector<Usuario *> &u, std::vector<Produto *> &p, std::vector<Pedido*> ped);
+    void carregarDados(std::vector<Usuario *> &u, std::vector<Produto *> &p, std::vector<Pedido *> ped);
 };
 
 #endif
