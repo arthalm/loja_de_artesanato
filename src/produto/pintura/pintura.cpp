@@ -1,11 +1,11 @@
 #include "pintura.h"
 
 Pintura::Pintura(std::string ttl, double pr, std::string ttinta, bool pmol, Dimensao tq)
-:Produto(ttl, pr), tipoTinta(ttinta), possuiMoldura(pmol), tamanhoQuadro(tq){}
+    : Produto(ttl, pr), tipoTinta(ttinta), possuiMoldura(pmol), tamanhoQuadro(tq) {}
 
 double Pintura::calcularPreco()
 {
-    if(possuiMoldura)
+    if (possuiMoldura)
     {
         return precoBase + (precoBase * 0.2);
     }
@@ -13,10 +13,16 @@ double Pintura::calcularPreco()
 }
 
 std::string Pintura::getTipoTinta()
-{return tipoTinta;}
+{
+    return tipoTinta;
+}
 
 bool Pintura::getPossuiMoldura()
-{return possuiMoldura;}
+{
+    return possuiMoldura;
+}
 
 Dimensao Pintura::getTamanho()
-{return tamanhoQuadro;}
+{
+    return tamanhoQuadro;
+}

@@ -14,7 +14,7 @@ GerenciadorArquivos::GerenciadorArquivos(std::string arqUsr, std::string arqProd
 
 void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Produto *> p)
 {
-    //parte de Usuarios
+    // parte de Usuarios
     std::ofstream fusr(arquivoUsuarios);
     if (!fusr.is_open())
     {
@@ -24,18 +24,26 @@ void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Prod
 
     for (Usuario *usr : u)
     {
-        //se usuario eh um cliente
+        // se usuario eh um cliente
         if (Cliente *c = dynamic_cast<Cliente *>(usr))
         {
+            const Endereco &e = c->getEndereco();
             fusr << "CLIENTE|"
                  << c->getNome() << "|"
                  << c->getLogin() << "|"
                  << c->getCpf() << "|"
                  << c->getSenha() << "|"
-                 << c->getEndereco() << "|"
+                 << e.getDestinatario() << "|"
+                 << e.getLogradouro() << "|"
+                 << e.getNumero() << "|"
+                 << e.getComplemento() << "|"
+                 << e.getBairro() << "|"
+                 << e.getCidade() << "|"
+                 << e.getEstado() << "|"
+                 << e.getCEP() << "|"
                  << c->getSaldoAtual() << "\n";
         }
-        //se usuario eh um artesao
+        // se usuario eh um artesao
         else if (Artesao *a = dynamic_cast<Artesao *>(usr))
         {
             fusr << "ARTESAO|"
@@ -49,7 +57,7 @@ void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Prod
     }
     fusr.close();
 
-    //parte de Produtos
+    // parte de Produtos
     std::ofstream fprod(arquivoProdutos);
     if (!fprod.is_open())
     {
@@ -59,7 +67,7 @@ void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Prod
 
     for (Produto *prod : p)
     {
-        //se produto eh uma pintura
+        // se produto eh uma pintura
         if (Pintura *pin = dynamic_cast<Pintura *>(prod))
         {
             fprod << "PINTURA|"
@@ -70,7 +78,7 @@ void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Prod
                   << static_cast<int>(pin->getTamanho()) << "|"
                   << pin->getIDartesao() << "\n";
         }
-        //se produto eh uma escultura
+        // se produto eh uma escultura
         else if (Escultura *esc = dynamic_cast<Escultura *>(prod))
         {
             fprod << "ESCULTURA|"
@@ -80,7 +88,7 @@ void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Prod
                   << static_cast<int>(esc->getPeso()) << "|"
                   << esc->getIDartesao() << "\n";
         }
-        //se produto eh um artesanato
+        // se produto eh um artesanato
         else if (Artesanato *art = dynamic_cast<Artesanato *>(prod))
         {
             fprod << "ARTESANATO|"
@@ -96,7 +104,7 @@ void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Prod
 
 void GerenciadorArquivos::carregarDados(std::vector<Usuario *> &u, std::vector<Produto *> &p)
 {
-    //parte de usuarios
+    // parte de usuarios
     std::ifstream fusr(arquivoUsuarios);
     if (fusr.is_open())
     {
@@ -109,15 +117,36 @@ void GerenciadorArquivos::carregarDados(std::vector<Usuario *> &u, std::vector<P
 
             if (tipo == "CLIENTE")
             {
-                std::string nm, log, cpf, pwd, end;
+                std::string nm, log, cpf, pwd;
+                std::string dest, logr, comp, bair, cid, est, cep;
+                int num;
                 double saldo;
                 std::getline(ss, nm, '|');
                 std::getline(ss, log, '|');
                 std::getline(ss, cpf, '|');
                 std::getline(ss, pwd, '|');
-                std::getline(ss, end, '|');
+                std::getline(ss, dest, '|');
+                std::getline(ss, logr, '|');
+                ss >> num;
+                ss.ignore();
+                std::getline(ss, comp, '|');
+                std::getline(ss, bair, '|');
+                std::getline(ss, cid, '|');
+                std::getline(ss, est, '|');
+                std::getline(ss, cep, '|');
                 ss >> saldo;
-                u.push_back(new Cliente(nm, log, cpf, pwd, end, saldo));
+                Endereco endereco(
+                    dest,
+                    logr,
+                    num,
+                    comp,
+                    bair,
+                    cid,
+                    est,
+                    cep);
+                Cliente *c = new Cliente(nm, log, cpf, pwd, saldo);
+                c->setEndereco(endereco);
+                u.push_back(c);
             }
             else if (tipo == "ARTESAO")
             {
@@ -134,7 +163,7 @@ void GerenciadorArquivos::carregarDados(std::vector<Usuario *> &u, std::vector<P
         fusr.close();
     }
 
-    //parte de produtos
+    // parte de produtos
     std::ifstream fprod(arquivoProdutos);
     if (fprod.is_open())
     {

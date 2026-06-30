@@ -14,7 +14,8 @@ SRCS = main.cpp \
        produto/pintura/pintura.cpp \
        produto/escultura/escultura.cpp \
        produto/artesanato/artesanato.cpp \
-       gerenciador/gerenciador.cpp
+       gerenciador/gerenciador.cpp \
+       endereco/endereco.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 

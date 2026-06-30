@@ -1,7 +1,7 @@
 #include "artesanato.h"
 
 Artesanato::Artesanato(std::string ttl, double pr, int tempo, bool sobEncomenda)
-: Produto(ttl, pr), tempoProducaoDias(tempo), feitoSobEncomenda(sobEncomenda) {}
+    : Produto(ttl, pr), tempoProducaoDias(tempo), feitoSobEncomenda(sobEncomenda) {}
 
 double Artesanato::calcularPreco()
 {
@@ -10,13 +10,19 @@ double Artesanato::calcularPreco()
     double preco = precoBase + (tempoProducaoDias * taxaDiaria);
 
     if (feitoSobEncomenda)
-    {preco += 50.0;}
+    {
+        preco += 50.0;
+    }
 
     return preco;
 }
 
 int Artesanato::getTempo()
-{return tempoProducaoDias;}
+{
+    return tempoProducaoDias;
+}
 
 bool Artesanato::getFeitoSobEncomenda()
-{return feitoSobEncomenda;}
+{
+    return feitoSobEncomenda;
+}

@@ -10,7 +10,7 @@ private:
     std::string biografia;
 
 public:
-    Artesao(std::string nm, std::string log, std::string c, std::string pwd, std::string nm_ate, std::string bio) 
+    Artesao(std::string nm, std::string log, std::string c, std::string pwd, std::string nm_ate, std::string bio)
         : Usuario(nm, log, c, pwd), nome_atelie(nm_ate), biografia(bio) {}
 
     std::string getNomeAtelie();
@@ -18,10 +18,10 @@ public:
 
     void exibirDados() override
     {
-        std::cout << "=== PERFIL DO ARTESÃO ===" 
-                  << "\nNome: " << getNome() 
-                  << "\nLogin: " << getLogin() 
-                  << "\nAteliê: " << getNomeAtelie() 
+        std::cout << "=== PERFIL DO ARTESÃO ==="
+                  << "\nNome: " << getNome()
+                  << "\nLogin: " << getLogin()
+                  << "\nAteliê: " << getNomeAtelie()
                   << "\nBio: " << getBiografia() << std::endl;
     }
 };

@@ -11,7 +11,7 @@ class Artesanato : public Produto
 
 public:
     Artesanato(std::string ttl, double pr, int tempo, bool sobEncomenda);
-    
+
     double calcularPreco() override;
 
     int getTempo();

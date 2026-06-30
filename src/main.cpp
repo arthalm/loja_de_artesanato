@@ -1,6 +1,7 @@
 #include "sistema/sistema.h"
 
-int main() {
+int main()
+{
     SistemaLoja sistema;
     sistema.iniciarSistema();
 

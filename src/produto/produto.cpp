@@ -4,22 +4,35 @@
 
 static int proximoID = 1;
 
-Produto::Produto(std::string ttl, double p): id(proximoID++), titulo(ttl), precoBase(p), idArtesao(0)
-{}
+Produto::Produto(std::string ttl, double p) : id(proximoID++), titulo(ttl), precoBase(p), idArtesao(0)
+{
+}
 
 int Produto::getID()
-{return id;}
+{
+    return id;
+}
 
 std::string Produto::getTitulo()
-{return titulo;}
+{
+    return titulo;
+}
 
 double Produto::getPreco()
-{return precoBase;}
+{
+    return precoBase;
+}
 
 int Produto::getIDartesao()
-{return idArtesao;}
+{
+    return idArtesao;
+}
+
+void Produto::setProximoID(int valor)
+{
+}
 
 void Produto::exibirDados()
 {
-    std::cout << titulo << " (#" << id << ") - R$ " << precoBase; 
+    std::cout << titulo << " (#" << id << ") - R$ " << precoBase;
 }

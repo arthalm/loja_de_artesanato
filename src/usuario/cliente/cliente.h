@@ -2,26 +2,36 @@
 #define CLIENTE_H
 
 #include "../usuario.h"
+#include "../../endereco/endereco.h"
 
 class Cliente : public Usuario
 {
 private:
-    std::string end_entrega;
+    Endereco end_entrega;
     double saldo_atual;
 
 public:
-    Cliente(std::string nm, std::string log, std::string c, std::string pwd, std::string end_ent, double sld_at) 
-        : Usuario(nm, log, c, pwd), end_entrega(end_ent), saldo_atual(sld_at) {}
+    Cliente(std::string nm, std::string log, std::string c, std::string pwd, double sld_at)
+        : Usuario(nm, log, c, pwd), end_entrega("", "", 0, "", "", "", "", ""), saldo_atual(sld_at) {}
 
-    std::string getEndereco();
+    const Endereco &getEndereco() const;
     double getSaldoAtual();
-
+    void setEndereco(const Endereco &end);
     void exibirDados() override
     {
-        std::cout << "=== PERFIL DO CLIENTE ===" 
-                  << "\nNome: " << getNome() 
-                  << "\nLogin: " << getLogin() 
-                  << "\nEndereço: " << getEndereco() 
+        const Endereco &e = getEndereco();
+
+        std::cout << "=== PERFIL DO CLIENTE ==="
+                  << "\nNome: " << getNome()
+                  << "\nLogin: " << getLogin()
+                  << "\nDestinatário: " << e.getDestinatario()
+                  << "\nLogradouro: " << e.getLogradouro()
+                  << ", " << e.getNumero()
+                  << "\nComplemento: " << e.getComplemento()
+                  << "\nBairro: " << e.getBairro()
+                  << "\nCidade: " << e.getCidade()
+                  << "\nEstado: " << e.getEstado()
+                  << "\nCEP: " << e.getCEP()
                   << "\nSaldo atual: R$ " << getSaldoAtual() << std::endl;
     }
 };
