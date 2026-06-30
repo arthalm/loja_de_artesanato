@@ -5,6 +5,15 @@ void Pedido::adicionarProduto (Produto* p)
     produtos.push_back(p);
 }
 
+std::string Pedido::getClienteLogin()
+{return cliente.getLogin();}
+
+Status Pedido::getStatus()
+{return statusAtual;}
+
+std::vector<Produto *> Pedido::getProdutos()
+{return produtos;}
+
 void Pedido::avancarEstado()
 {
     switch (statusAtual)

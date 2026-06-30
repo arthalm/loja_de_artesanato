@@ -24,6 +24,12 @@ public:
 
     Pedido(Cliente c) : cliente(c), statusAtual(Status::RECEBIDO){}
 
+    std::string getClienteLogin();
+
+    Status getStatus();
+
+    std::vector<Produto*> getProdutos();
+
     void adicionarProduto (Produto* p);
 
     void avancarEstado();

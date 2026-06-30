@@ -9,10 +9,10 @@
 #include <sstream>
 #include <iostream>
 
-GerenciadorArquivos::GerenciadorArquivos(std::string arqUsr, std::string arqProd)
+GerenciadorArquivos::GerenciadorArquivos(std::string arqUsr, std::string arqProd, std::string arqPed)
     : arquivoUsuarios(arqUsr), arquivoProdutos(arqProd) {}
 
-void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Produto *> p)
+void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Produto *> p, std::vector<Pedido*> ped)
 {
     //parte de Usuarios
     std::ofstream fusr(arquivoUsuarios);
@@ -92,9 +92,30 @@ void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Prod
         }
     }
     fprod.close();
+
+    //parte de pedido
+    std::ofstream fped("pedidos.txt");
+    if (!fped.is_open())
+    {
+        std::cerr << "Erro ao abrir " << arquivoPedidos << " para escrita.\n";
+        return;
+    }
+
+    for (Pedido *ped : ped)
+    {
+        fped << "PEDIDO|"
+             << ped->getClienteLogin() << "|"
+             << static_cast<int>(ped->getStatus());
+        for (Produto *p : ped->getProdutos())
+        {
+            fped << "|" << p->getID();
+        }
+        fped << "\n";
+    }
+    fped.close();
 }
 
-void GerenciadorArquivos::carregarDados(std::vector<Usuario *> &u, std::vector<Produto *> &p)
+void GerenciadorArquivos::carregarDados(std::vector<Usuario *> &u, std::vector<Produto *> &p, std::vector<Pedido*> ped)
 {
     //parte de usuarios
     std::ifstream fusr(arquivoUsuarios);
@@ -196,5 +217,58 @@ void GerenciadorArquivos::carregarDados(std::vector<Usuario *> &u, std::vector<P
             }
         }
         fprod.close();
+    }
+
+    //parte de pedidos
+    std::ifstream fped("pedidos.txt");
+    if (fped.is_open())
+    {
+        std::string linha;
+        while (std::getline(fped, linha))
+        {
+            std::stringstream ss(linha);
+            std::string tipo, loginCliente, statusStr;
+            std::getline(ss, tipo, '|');
+            std::getline(ss, loginCliente, '|');
+            std::getline(ss, statusStr, '|');
+
+            Cliente *c = nullptr;
+            for (Usuario *usr : u)
+            {
+                if (Cliente *cl = dynamic_cast<Cliente *>(usr))
+                {
+                    if (cl->getLogin() == loginCliente)
+                    {
+                        c = cl;
+                        break;
+                    }
+                }
+            }
+
+            if (!c)
+            {continue;}
+
+            //ajusta o status dos pedidos
+            //pq foram salvos como int no arquivo
+            Pedido *pedido = new Pedido(*c);
+            int status = std::stoi(statusStr);
+            for (int i = 0; i < status; i++)
+            {pedido->avancarEstado();}
+
+            // adiciona os produtos pelo ID
+            std::string idStr;
+            while (std::getline(ss, idStr, '|'))
+            {
+                int id = std::stoi(idStr);
+                for (Produto *prod : p)
+                    if (prod->getID() == id)
+                    {
+                        pedido->adicionarProduto(prod);
+                        break;
+                    }
+            }
+            ped.push_back(pedido);
+        }
+        fped.close();
     }
 }
