@@ -5,8 +5,10 @@
 #include "../usuario/cliente/cliente.h"
 #include "../usuario/artesao/artesao.h"
 #include "../gerenciador/gerenciador.h"
+#include "excecoes.h"
 #include <iostream>
 #include <limits>
+#include <regex>
 
 SistemaLoja::SistemaLoja()
 {
@@ -93,7 +95,8 @@ void SistemaLoja::menuCliente()
     std::cout << "1. Ver Catalogo de Produtos\n";
     std::cout << "2. Comprar Produtos\n";
     std::cout << "3. Meu Perfil\n";
-    std::cout << "4. Meu Endereço\n";
+    std::cout << "4. Meu Endereco\n";
+    std::cout << "5. Adicionar Saldo (PIX)\n";
     std::cout << "0. Fazer Logout\n";
     std::cout << "Escolha: ";
     std::cin >> opcao;
@@ -112,6 +115,17 @@ void SistemaLoja::menuCliente()
     case 4:
         cadastrarEndereco();
         break;
+    case 5: {
+            double valorPix;
+            std::cout << "Digite o valor do deposito PIX: R$ ";
+            std::cin >> valorPix;
+            Cliente* c = dynamic_cast<Cliente*>(usuarioLogado);
+            if (c) {
+                c->adicionarSaldo(valorPix);
+                std::cout << "-> Deposito realizado com sucesso! Novo saldo: R$ " << c->getSaldoAtual() << "\n";
+            }
+            break;
+    }
     case 0:
         usuarioLogado = nullptr;
         std::cout << "Logout realizado com sucesso!\n";
@@ -199,17 +213,57 @@ void SistemaLoja::cadastrarCliente()
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cout << "\n-- Cadastro de Novo Cliente --\nNome: ";
     std::getline(std::cin, nome);
-    std::cout << "Login: ";
-    std::getline(std::cin, login);
-    std::cout << "CPF: ";
-    std::getline(std::cin, cpf);
-    std::cout << "Senha: ";
-    std::getline(std::cin, senha);
-    std::cout << "Saldo Inicial (R$): ";
-    std::cin >> saldo;
+    
+    try {
+        std::cout << "Login (E-mail): ";
+        std::getline(std::cin, login);
+        
+        if (login.find('@') == std::string::npos) {
+            throw EmailInvalidoException();
+        }
 
-    usuarios.push_back(new Cliente(nome, login, cpf, senha, saldo));
-    std::cout << "-> Cliente cadastrado com sucesso! Voce ja pode fazer login.\n";
+        std::cout << "CPF (XXX.XXX.XXX-XX): ";
+        std::getline(std::cin, cpf);
+        
+        std::regex padraoCpf("^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$");
+        if (!std::regex_match(cpf, padraoCpf)) {
+            throw CpfInvalidoException();
+        }
+
+        for (auto u : usuarios) {
+            Cliente* c = dynamic_cast<Cliente*>(u);
+            if (c != nullptr && c->getCpf() == cpf) {
+                throw CpfRepetidoException();
+            }
+            
+            Artesao* a = dynamic_cast<Artesao*>(u);
+            if (a != nullptr && a->getCpf() == cpf) {
+                throw CpfRepetidoException();
+            }
+        }
+
+        std::cout << "Senha: ";
+        std::getline(std::cin, senha);
+        
+        if (senha.length() < 4) {
+            throw SenhaInvalidaException();
+        }
+
+        std::cout << "Saldo Inicial (R$): ";
+        std::cin >> saldo;
+
+        usuarios.push_back(new Cliente(nome, login, cpf, senha, saldo));
+        std::cout << "-> Cliente cadastrado com sucesso! Voce ja pode fazer login.\n";
+
+    } catch (const EmailInvalidoException& e) {
+        std::cout << "\n" << e.what() << "\n";
+    } catch (const SenhaInvalidaException& e) {
+        std::cout << "\n" << e.what() << "\n";
+    } catch (const CpfInvalidoException& e) {
+        std::cout << "\n" << e.what() << "\n";
+    } catch (const CpfRepetidoException& e) {
+        std::cout << "\n" << e.what() << "\n";
+    }
 }
 
 void SistemaLoja::cadastrarArtesao()
@@ -217,21 +271,61 @@ void SistemaLoja::cadastrarArtesao()
     std::string nome, login, cpf, senha, atelie, biografia;
 
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::cout << "\n-- Cadastro de Novo Artesao --\nNome: ";
+    std::cout << "\n-- Cadastro de Novo Cliente --\nNome: ";
     std::getline(std::cin, nome);
-    std::cout << "Login: ";
-    std::getline(std::cin, login);
-    std::cout << "CPF: ";
-    std::getline(std::cin, cpf);
-    std::cout << "Senha: ";
-    std::getline(std::cin, senha);
-    std::cout << "Nome do Atelie: ";
-    std::getline(std::cin, atelie);
-    std::cout << "Biografia: ";
-    std::getline(std::cin, biografia);
+    
+    try {
+        std::cout << "Login (E-mail): ";
+        std::getline(std::cin, login);
+        
+        if (login.find('@') == std::string::npos) {
+            throw EmailInvalidoException();
+        }
 
-    usuarios.push_back(new Artesao(nome, login, cpf, senha, atelie, biografia));
-    std::cout << "-> Artesao cadastrado com sucesso! Voce ja pode fazer login.\n";
+        std::cout << "CPF (XXX.XXX.XXX-XX): ";
+        std::getline(std::cin, cpf);
+        
+        std::regex padraoCpf("^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$");
+        if (!std::regex_match(cpf, padraoCpf)) {
+            throw CpfInvalidoException();
+        }
+
+        for (auto u : usuarios) {
+            Cliente* c = dynamic_cast<Cliente*>(u);
+            if (c != nullptr && c->getCpf() == cpf) {
+                throw CpfRepetidoException();
+            }
+            
+            Artesao* a = dynamic_cast<Artesao*>(u);
+            if (a != nullptr && a->getCpf() == cpf) {
+                throw CpfRepetidoException();
+            }
+        } 
+
+        std::cout << "Senha: ";
+        std::getline(std::cin, senha);
+        
+        if (senha.length() < 4) {
+            throw SenhaInvalidaException();
+        }
+
+        std::cout << "Nome do Atelie: ";
+        std::getline(std::cin, atelie);
+        std::cout << "Biografia: ";
+        std::getline(std::cin, biografia);
+
+        usuarios.push_back(new Artesao(nome, login, cpf, senha, atelie, biografia));
+        std::cout << "-> Artesao cadastrado com sucesso! Voce ja pode fazer login.\n";
+
+    } catch (const EmailInvalidoException& e) {
+        std::cout << "\n" << e.what() << "\n";
+    } catch (const SenhaInvalidaException& e) {
+        std::cout << "\n" << e.what() << "\n";
+    } catch (const CpfInvalidoException& e) {
+        std::cout << "\n" << e.what() << "\n";
+    } catch (const CpfRepetidoException& e) {
+        std::cout << "\n" << e.what() << "\n";
+    }
 }
 
 void SistemaLoja::cadastrarProduto()
@@ -357,12 +451,30 @@ void SistemaLoja::realizarVenda()
         }
     }
 
-    novoPedido->avancarEstado();
-    pedidos.push_back(novoPedido);
+    double totalCompra = novoPedido->calcularTotal();
+    try {
+        if (clienteAtual->getSaldoAtual() < totalCompra) {
+            throw SaldoInsuficienteException();
+        }
 
-    std::cout << "Pedido finalizado com sucesso!\n";
-    std::cout << "Comprador: " << clienteAtual->getNome() << "\n";
-    std::cout << "Valor total da compra: R$ " << novoPedido->calcularTotal() << "\n";
+        clienteAtual->descontarSaldo(totalCompra);
+        novoPedido->avancarEstado(); 
+        pedidos.push_back(novoPedido);
+
+        std::cout << "Pedido finalizado com sucesso!\n";
+        std::cout << "Comprador: " << clienteAtual->getNome() << "\n";
+        std::cout << "Valor cobrado: R$ " << totalCompra << "\n";
+        std::cout << "Saldo restante: R$ " << clienteAtual->getSaldoAtual() << "\n";
+
+    } catch (const SaldoInsuficienteException& e) {
+        std::cout << e.what() << "\n";
+        std::cout << "Total da compra: R$ " << totalCompra << "\n";
+        std::cout << "Seu saldo atual: R$ " << clienteAtual->getSaldoAtual() << "\n";
+        std::cout << "Dica: Va no menu e faca um deposito via PIX.\n";
+        std::cout << "Venda Cancelada.\n";
+
+        delete novoPedido; 
+    }
 }
 
 void SistemaLoja::cadastrarEndereco()
