@@ -135,7 +135,7 @@ void GerenciadorArquivos::salvarDados(std::vector<Usuario *> u, std::vector<Prod
     fped.close();
 }
 
-void GerenciadorArquivos::carregarDados(std::vector<Usuario *> &u, std::vector<Produto *> &p, std::vector<Pedido *> ped)
+void GerenciadorArquivos::carregarDados(std::vector<Usuario *> &u, std::vector<Produto *> &p, std::vector<Pedido *> &ped)
 {
     // parte de usuarios
     std::ifstream fusr(arquivoUsuarios);
@@ -301,13 +301,28 @@ void GerenciadorArquivos::carregarDados(std::vector<Usuario *> &u, std::vector<P
             Pedido *pedido = new Pedido(*c);
             int status = std::stoi(statusStr);
             for (int i = 0; i < status; i++)
-            {pedido->avancarEstado();}
+            {
+                pedido->avancarEstado();
+            }
 
-            // adiciona os produtos pelo ID
+            std::string dest, logr, comp, bairro, cidade, estado, cep, numeroStr;
+
+            std::getline(ss, dest, '|');
+            std::getline(ss, logr, '|');
+            std::getline(ss, numeroStr, '|');
+            std::getline(ss, comp, '|');
+            std::getline(ss, bairro, '|');
+            std::getline(ss, cidade, '|');
+            std::getline(ss, estado, '|');
+            std::getline(ss, cep, '|');
+
+            Endereco endereco(dest, logr, std::stoi(numeroStr), comp, bairro, cidade, estado, cep);
+
             std::string idStr;
             while (std::getline(ss, idStr, '|'))
             {
                 int id = std::stoi(idStr);
+
                 for (Produto *prod : p)
                 {
                     if (prod->getID() == id)

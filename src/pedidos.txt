@@ -1,1 +1,1 @@
-PEDIDO|leo|2|leonardo|rua|1|casa|lagoa nova|natal|rn|12345678|1
+PEDIDO|leo|2|||0||||||1
